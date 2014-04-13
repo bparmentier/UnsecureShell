@@ -14,8 +14,10 @@ Usage
 démonstration.
 
 Les adresses IP sont hardcodées (127.0.0.1 par défaut). Lancer `ShellServeur`
-puis `ShellClient`. De nombreux bugs sont encore présents (par exemple, le
-client bloque lorsque la commande exécutée de renvoie rien...).
+puis `ShellClient`.
+
+De nombreux bugs sont encore présents (par exemple, le
+client bloque lorsque la commande exécutée de renvoie rien à afficher...).
 
 Dépendances
 -----------
