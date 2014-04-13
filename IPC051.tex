@@ -1,0 +1,130 @@
+\documentclass[french,10pt,a4paper]{article}
+%\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+% Modification des marges ------------------------------
+\oddsidemargin -4mm % Decreases the left margin by 4mm
+\textwidth 17cm %Sets text width across page = 17cm
+\textheight 22cm %Sets text height up and down = 22cm
+% -----------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage{graphicx,color, caption2}
+\usepackage{epsfig}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{makeidx}
+\usepackage{textcomp} % pour le copyleft
+
+% Valeurs par défaut le lstset
+\lstset{language={},%C,Assembleur, TeX, tcl, basic, cobol, fortran, logo, make, pascal, perl, prolog, {}
+    literate={â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+         {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+         {à}{{\`a}}1 {é}{{\'e}}1 {è}{{\`e}}1 {ù}{{\`u}}1 
+         {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+         {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+         {À}{{\`A}}1 {É}{{\'E}}1 {È}{{\`E}}1 {Ù}{{\`U}}1,
+    commentstyle=\scriptsize\ttfamily\slshape, % style des commentaires
+    basicstyle=\scriptsize\ttfamily, % style par défaut
+    keywordstyle=\scriptsize\rmfamily\bfseries,% style des mots-clés
+    backgroundcolor=\color[rgb]{.95,.95,.95}, % couleur de fond : gris clair
+    framerule=0.5pt,% Taille des bords
+    frame=trbl,% Style du cadre
+    frameround=tttt, % Bords arrondis 
+    tabsize=3, % Taille des tabulations
+%   extendedchars=\true, % Incompatible avec utf8 et literate
+    inputencoding=utf8,
+    showspaces=false, % Ne montre pas les espaces 
+    showstringspaces=false, % Ne montre pas les espaces entre ''
+    xrightmargin=-1cm, % Retrait gauche 
+    xleftmargin=-1cm, % Retrait droit
+    escapechar=°}  % Caractère d'échappement, permet des commandes latex dans la source
+% -----------------------------------------------------
+%\makeindex
+\begin{document}
+\lhead{Labo IPC S.E 2$e$}
+\rhead{Page \thepage}
+\lfoot{\textcopyleft Bruno Parmentier (G38496) }
+\rfoot{\today}
+\cfoot{ }
+\renewcommand{\footrulewidth}{0.4pt}
+
+\setlength{\parindent}{0pt} % pas d'indentation
+
+\lstset{frame=trBL}
+
+\setcounter{tocdepth}{1}    % limiter les nivaux de table des matières
+\setcounter{secnumdepth}{5} % La numérotation des sections au maximum
+
+\newcommand{\titre}{Titre du sujet} % la variable contenant le titre du sujet
+
+
+\title{\emph{Laboratoire\\\textbf{IPC}}}
+\author{Bruno Parmentier (G38496)}
+\date{31 mars 2014}
+\maketitle
+\thispagestyle{empty}
+%\tableofcontents
+% ~\\[5cm]
+% \flushright{Dis, papa, ça veut dire quoi "Formating drive c" ?}
+% \flushleft{ }
+\newpage
+%
+\lstset{language={c}}
+\renewcommand{\titre}{\textcolor{blue}{ IPC051 - pilotage à distance }}
+
+\lhead{ \titre }
+\section{{\titre} }
+
+\begin{tabular}{|l|l|}
+\hline
+Titre : 	& \titre \\\hline
+Support : 	& MDV2007 Installation Classique \\\hline
+Date :		& 03/2014 \\\hline
+\end{tabular}
+
+\subsection{Énoncé}
+
+On vous donne un shell simple. Modifiez-le afin d’y ajouter le pilotage à
+distance. Les commandes entrées au clavier d’un processus client seront
+communiquées au shell serveur. Les résultats des commandes (stdout et stderr)
+seront affichées chez le client. Le shell ne traite qu’un client à la fois.
+
+\subsection{Une solution}
+
+\subsubsection{Serveur}
+%\lstinputlisting{sources/ShellServeur.c}
+Voir \verb#source/ShellServeur.c#.
+
+\subsubsection{Client}
+%\lstinputlisting{sources/ShellClient.c}
+Voir \verb#sources/ShellClient.c#.
+
+\subsection{Commentaires}
+
+\begin{itemize}
+    \item Le serveur ShellServeur est lancé. Il crée un socket et attend que
+        le client se connecte.
+    \item Le client ShellClient est lancé. Il crée un socket et demande une
+        connexion au serveur.
+    \item Une fois la connexion établie, le client envoie la commande lue au
+        clavier. Celle-ci est reçue par le serveur qui l'exécute.
+    \item Nous avons redirigé la sortie standard du serveur vers le descripteur
+        de fichier donné par \verb#accept# (avec la fonction \verb#dup2#).
+    \item Le résultat de la commande exécutée par le serveur est donc renvoyée
+        au client via le socket.
+\end{itemize}
+
+\subsection{Bugs}
+\begin{itemize}
+    \item La taille du buffer de lecture du socket dans le client est définie à
+        l'avance donc la fin du résultat de la commande peut être perdu.
+    \item Lorsque le commande exécutée ne renvoie rien, le client tourne en
+        boucle et il faut forcer l'arrêt de celui-ci avec \verb#Ctrl + C# puis
+        faire un \verb#killall ShellServeur# pour arrêter le serveur.
+    \item Quelques commandes testées~: \verb#ls -l#, \verb#cat Demo#, \verb#echo hello#, \verb#blrzgb#.
+    \item Pas de gestion des pipes, redirections, etc. 
+\end{itemize}
+%\newpage
+\end{document}

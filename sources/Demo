@@ -1,0 +1,40 @@
+#!/bin/bash
+#NOM    : Demo
+#CLASSE : IPC - IPC051
+#OBJET  : réservé au makefile
+#AUTEUR	: Bruno Parmentier, 03/2014
+C='\033[44m'
+E='\033[32m\033[1m'
+W='\033[31m\033[1m'
+N='\033[0m'
+clear
+echo "Démonstration des programmes ShellClient.c et ShellServeur.c"
+echo "---------------------------------------------------"
+echo
+echo "1°) vérification des connexions réseau"
+echo "----------------------------------"
+echo -e "Éxecution de ${E}/sbin/ifconfig${N} :"
+/sbin/ifconfig
+echo -e "${C}             --> Enter pour continuer${N}"; read
+clear
+echo "Vérification de l'interface 127.0.0.1"
+echo "-------------------------------------"
+echo -e "Éxecution de ${E}ping -c 5 127.0.0.1${N} :"
+ping -c 5 127.0.0.1
+echo -e "${C}             --> Enter pour continuer${N}"; read
+clear
+echo "Lancement du serveur en background"
+echo "----------------------------------"
+echo -e "Éxecution de ${E}./ShellServeur &${N}"
+./ShellServeur &
+sleep 2
+echo
+echo
+echo "Lancement du client"
+echo "-------------------"
+echo -e "Éxecution de ${E}./ShellClient${N}" 
+./ShellClient
+sleep 1
+echo
+echo
+echo -e "${C}             --> Enter pour continuer${N}"; read
