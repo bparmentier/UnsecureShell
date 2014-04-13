@@ -10,7 +10,7 @@ Simple shell client-serveur en C avec sockets.
 Usage
 -----
 `make` dans le répertoire principal produit le rapport au format PostScript.
-`make` dans le répertoire SOURCES produit un exécutable et lance une
+`make` dans le répertoire `sources` produit un exécutable et lance une
 démonstration.
 
 Les adresses IP sont hardcodées (127.0.0.1 par défaut). Lancer `ShellServeur`
